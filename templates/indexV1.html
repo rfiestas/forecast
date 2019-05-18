@@ -59,13 +59,13 @@
                         </div>
                     </div>
                     <div class="row pl-1 pt-2 pb-4">
-                        <div class="col-3">
+                        <div class="col">
                             <i class="wi wi-umbrella"></i>&nbsp;{{:current.precip_mm}}%
                         </div>
-                        <div class="col-5">
+                        <div class="col pl-0">
                             <i class="wi wi-strong-wind"></i>&nbsp;{{:~floatRound(current.wind_kph)}}km/h
                         </div>
-                        <div class="col-4">
+                        <div class="col pl-0">
                             <i
                                 class="wi wi-wind
                                 wi-towards-{{:~stringToCase(current.wind_dir, false)}}"></i>&nbsp;{{:current.wind_dir}}
