@@ -32,3 +32,9 @@ func GetIndex(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w,string(data))
 	return
 }
+func GetRobots(w http.ResponseWriter, r *http.Request) {
+	var data string
+	data = "User-agent: *\nDisallow: /\n"
+	fmt.Fprint(w,data)
+	return
+}

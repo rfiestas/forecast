@@ -146,7 +146,7 @@
         }
         function getForecast(){
             var location = $('#location').val()
-            $.getJSON('forecast.json?location='+ location, function (data) {
+            $.getJSON('forecast?location='+ location, function (data) {
                 $('#output').html($('#template').render(data));
             });
         }
