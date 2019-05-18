@@ -228,3 +228,8 @@ func GetForecastAPIV1 (query string) string {
 	}
 	return (string(resJSON))
 }
+
+// GetIndexAPIV1 : Get index.html
+func GetIndexAPIV1 () string {
+	return ("templates/indexV1.html")
+}
