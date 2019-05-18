@@ -6,11 +6,12 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"time"
 	"os"
+	"time"
 )
 
 var apixuKey = os.Getenv("apixu_key")
+
 const days = "7"
 const apiURL = "http://api.apixu.com"
 
@@ -92,107 +93,109 @@ type forecastStruct struct {
 }
 
 // conditionList : map apixu weather conditions to Yahoo icon
-// check https://erikflowers.github.io/weather-icons/api-list.html 
-var conditionList = map[string]string {
-	"Sunny":"32",
-	"Clear":"31",
-	"Partly cloudy":"30",
-	"Cloudy":"26",
-	"Overcast":"26",
-	"Mist":"20",
-	"Patchy rain possible":"11",
-	"Patchy snow possible":"13",
-	"Patchy sleet possible":"12",
-	"Patchy freezing drizzle possible":"25",
-	"Thundery outbreaks possible":"3",
-	"Blowing snow":"5",
-	"Blizzard":"43",
-	"Fog":"20",
-	"Freezing fog":"20",
-	"Patchy light drizzle":"11",
-	"Light drizzle":"11",
-	"Freezing drizzle":"11",
-	"Heavy freezing drizzle":"11",
-	"Patchy light rain":"11",
-	"Light rain":"11",
-	"Moderate rain at times":"11",
-	"Moderate rain":"11",
-	"Heavy rain at times":"17",
-	"Heavy rain":"17",
-	"Light freezing rain":"11",
-	"Moderate or heavy freezing rain":"17",
-	"Light sleet":"11",
-	"Moderate or heavy sleet":"17",
-	"Patchy light snow":"13",
-	"Light snow":"13",
-	"Patchy moderate snow":"18",
-	"Moderate snow":"18",
-	"Patchy heavy snow":"18",
-	"Heavy snow":"18",
-	"Ice pellets":"25",
-	"Light rain shower":"13",
-	"Moderate or heavy rain shower":"18",
-	"Torrential rain shower":"18",
-	"Light sleet showers":"13",
-	"Moderate or heavy sleet showers":"18",
-	"Light snow showers":"13",
-	"Moderate or heavy snow showers":"18",
-	"Light showers of ice pellets":"18",
-	"Moderate or heavy showers of ice pellets":"18",
-	"Patchy light rain with thunder":"37",
-	"Moderate or heavy rain with thunder":"3",
-	"Patchy light snow with thunder":"39",
-	"Moderate or heavy snow with thunder":"3",
+// check https://erikflowers.github.io/weather-icons/api-list.html
+var conditionList = map[string]string{
+	"Sunny":                                    "32",
+	"Clear":                                    "31",
+	"Partly cloudy":                            "30",
+	"Cloudy":                                   "26",
+	"Overcast":                                 "26",
+	"Mist":                                     "20",
+	"Patchy rain possible":                     "11",
+	"Patchy snow possible":                     "13",
+	"Patchy sleet possible":                    "12",
+	"Patchy freezing drizzle possible":         "25",
+	"Thundery outbreaks possible":              "3",
+	"Blowing snow":                             "5",
+	"Blizzard":                                 "43",
+	"Fog":                                      "20",
+	"Freezing fog":                             "20",
+	"Patchy light drizzle":                     "11",
+	"Light drizzle":                            "11",
+	"Freezing drizzle":                         "11",
+	"Heavy freezing drizzle":                   "11",
+	"Patchy light rain":                        "11",
+	"Light rain":                               "11",
+	"Moderate rain at times":                   "11",
+	"Moderate rain":                            "11",
+	"Heavy rain at times":                      "17",
+	"Heavy rain":                               "17",
+	"Light freezing rain":                      "11",
+	"Moderate or heavy freezing rain":          "17",
+	"Light sleet":                              "11",
+	"Moderate or heavy sleet":                  "17",
+	"Patchy light snow":                        "13",
+	"Light snow":                               "13",
+	"Patchy moderate snow":                     "18",
+	"Moderate snow":                            "18",
+	"Patchy heavy snow":                        "18",
+	"Heavy snow":                               "18",
+	"Ice pellets":                              "25",
+	"Light rain shower":                        "13",
+	"Moderate or heavy rain shower":            "18",
+	"Torrential rain shower":                   "18",
+	"Light sleet showers":                      "13",
+	"Moderate or heavy sleet showers":          "18",
+	"Light snow showers":                       "13",
+	"Moderate or heavy snow showers":           "18",
+	"Light showers of ice pellets":             "18",
+	"Moderate or heavy showers of ice pellets": "18",
+	"Patchy light rain with thunder":           "37",
+	"Moderate or heavy rain with thunder":      "3",
+	"Patchy light snow with thunder":           "39",
+	"Moderate or heavy snow with thunder":      "3",
 }
 
 // weatherConditionsYahooMap : convert from apixu weather conditions to Yahoo icon
-// check https://erikflowers.github.io/weather-icons/api-list.html 
+// check https://erikflowers.github.io/weather-icons/api-list.html
 func weatherConditionsYahooMap(condition string) string {
 	api := "yahoo"
 
 	if value, present := conditionList[condition]; present {
-      		return (fmt.Sprintf("%s-%s", api, value))
-   	}
+		return (fmt.Sprintf("%s-%s", api, value))
+	}
 	return (fmt.Sprintf("%s-32", api)) // Other condition is sunny :)
 }
 
-// forecastAPIV1 : forecast struct convert 
+// forecastAPIV1 : forecast struct convert
 func forecastAPIV1(forecast forecastStruct) ForecastAPIV1Struct {
-    var res ForecastAPIV1Struct
-    lastUpdated, _ := time.Parse("2006-01-02 15:04", forecast.Current.LastUpdated)
-    res.Location.Name = forecast.Location.Name
-    res.Current.LastUpdated = lastUpdated
-    res.Current.TempC = forecast.Current.TempC
+	var res ForecastAPIV1Struct
+	lastUpdated, _ := time.Parse("2006-01-02 15:04", forecast.Current.LastUpdated)
+	res.Location.Name = forecast.Location.Name
+	res.Current.LastUpdated = lastUpdated
+	res.Current.TempC = forecast.Current.TempC
 	res.Current.Condition.Text = forecast.Current.Condition.Text
 	res.Current.Condition.Icon = weatherConditionsYahooMap(forecast.Current.Condition.Text)
 	res.Current.PrecipMm = forecast.Current.PrecipMm
 	res.Current.WindKph = forecast.Current.WindKph
-    res.Current.WindDir = forecast.Current.WindDir
-	
-    for k, v := range forecast.Forecast.Forecastday {
-		if (k==0){continue}
+	res.Current.WindDir = forecast.Current.WindDir
+
+	for k, v := range forecast.Forecast.Forecastday {
+		if k == 0 {
+			continue
+		}
 		forecastdayDate, _ := time.Parse("2006-01-02", v.Date)
 		var forecastday ForecastdayAPIV1Struct
-        forecastday.Date = forecastdayDate
+		forecastday.Date = forecastdayDate
 		forecastday.Day.Condition.Text = v.Day.Condition.Text
 		forecastday.Day.Condition.Icon = weatherConditionsYahooMap(v.Day.Condition.Text)
-        forecastday.Day.AvgtempC = v.Day.AvgtempC
-        forecastday.Day.MaxtempC = v.Day.MaxtempC
-        forecastday.Day.MintempC = v.Day.MintempC
-        
-        res.Forecast.Forecastday = append (res.Forecast.Forecastday, forecastday)
-    }
-    
-    return res
+		forecastday.Day.AvgtempC = v.Day.AvgtempC
+		forecastday.Day.MaxtempC = v.Day.MaxtempC
+		forecastday.Day.MintempC = v.Day.MintempC
+
+		res.Forecast.Forecastday = append(res.Forecast.Forecastday, forecastday)
+	}
+
+	return res
 }
 
 // GetForecastAPIV1 : Get Forecast from apixu
-func GetForecastAPIV1 (query string) string {
-	
+func GetForecastAPIV1(query string) string {
+
 	if len(apixuKey) == 0 {
 		log.Fatal("apixu_key variable not defined")
 	}
-	
+
 	url := fmt.Sprintf("%s/v1/forecast.json?key=%s&q=%s&days=%s", apiURL, apixuKey, query, days)
 
 	spaceClient := http.Client{
@@ -230,6 +233,6 @@ func GetForecastAPIV1 (query string) string {
 }
 
 // GetIndexAPIV1 : Get index.html
-func GetIndexAPIV1 () string {
+func GetIndexAPIV1() string {
 	return ("templates/indexV1.html")
 }
