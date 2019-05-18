@@ -44,7 +44,7 @@ func GetIndex(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// GetRobots: Return robots.txt
+// GetRobots : Return robots.txt
 func GetRobots(w http.ResponseWriter, r *http.Request) {
 	var data string
 	data = "User-agent: *\nDisallow: \n"
