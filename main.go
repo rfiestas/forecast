@@ -2,15 +2,37 @@
 package p
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
+
+	"log"
 )
 
-// getQueryKey : take a http request url query key, assign default value when not exist.
+// providers init
+func providers() Forecast {
+	var locationProvider Location
+	var forecastProvider Forecast
+	var err error
+
+	// Init Location Provider
+	locationProvider, err = NewMapquest()
+	if err != nil {
+		log.Fatal(err)
+	}
+	// Init Forecast Provider
+	forecastProvider, err = NewOpenweather(locationProvider)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return forecastProvider
+}
+
+// getQueryKey take a http request url query key, assign default value when not exist.
 func getQueryKey(r *http.Request, key string, failure string) string {
 	var value string
 	keys, ok := r.URL.Query()[key]
@@ -22,19 +44,34 @@ func getQueryKey(r *http.Request, key string, failure string) string {
 	return url.QueryEscape(value)
 }
 
-// ForecastAPIV1 : Forecast call
+// ForecastAPIV1 Forecast call
 func ForecastAPIV1(w http.ResponseWriter, r *http.Request) {
 	var location string
+	// Init Providers
+	provider := providers()
+
+	// Fetch Forecast
 	location = getQueryKey(r, "location", "Barcelona")
-	fmt.Fprint(w, GetForecastAPIV1(url.QueryEscape(location)))
-	return
+	forecast, err := provider.GetForecastFromName(url.QueryEscape(location))
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	// Convert to Json and print
+	res, err := json.Marshal(forecast)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	fmt.Fprint(w, string(res))
 }
 
-// GetIndex : Return index.html
+// GetIndex returns the index.html
 func GetIndex(w http.ResponseWriter, r *http.Request) {
 	var location string
 	location = getQueryKey(r, "location", "Barcelona")
-	data, err := ioutil.ReadFile(GetIndexAPIV1())
+	data, err := ioutil.ReadFile("templates/indexV1.html")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -44,7 +81,7 @@ func GetIndex(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// GetRobots : Return robots.txt
+// GetRobots returns the robots.txt
 func GetRobots(w http.ResponseWriter, r *http.Request) {
 	var data string
 	data = "User-agent: *\nDisallow: \n"
