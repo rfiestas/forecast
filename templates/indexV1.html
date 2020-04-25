@@ -1,41 +1,45 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <title>Weather Forecast</title>
     <meta name="description" content="weather forecast">
     <meta name="author" content="weather forecast">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons-wind.min.css">
 </head>
 
 <body class="text-light" style="background-color:#1e202b;">
     <header>
-      <nav class="navbar navbar-expand-md navbar-dark fixed-top" style="background-color:#323544";>
-        <a class="navbar-brand" href="#"><i class="wi wi-hot" style="color:#d65a31"></i>&nbsp;Weather Forecast</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-          <ul class="navbar-nav mr-auto">
-          </ul>
-          <form class="form-inline mt-2 mt-md-0 mb-0">
-            <input id="location" class="form-control mr-sm-2" type="text" placeholder="Location" aria-label="Search" value="#LOCATION#">
-            <button id="go" class="btn btn-light my-2 my-sm-0" type="submit">Go</button>
-          </form>
-        </div>
-      </nav>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top" style="background-color:#323544" ;>
+            <a class="navbar-brand" href="#"><i class="wi wi-hot" style="color:#d65a31"></i>&nbsp;Weather Forecast</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+                </ul>
+                <form class="form-inline mt-2 mt-md-0 mb-0">
+                    <input id="location" class="form-control mr-sm-2" type="text" placeholder="Location"
+                        aria-label="Search" value="#LOCATION#">
+                    <button id="go" class="btn btn-light my-2 my-sm-0" type="submit">Go</button>
+                </form>
+            </div>
+        </nav>
     </header>
     <main id="output" class="h-100 pt-5" style="color:#bbbdc4"></main>
     <script id="template" type="text/x-jsrender">
         <div class="container pt-5">
             <div class="row">
-                <div class="col text-center"
+                <div class="col text-center d-none d-sm-block"
                     style="background-color: #323544;border-radius: 15px 0px 0px 15px;flex:0 0 1%;">
-                    <div class="row pt-2 pb-2" style="background-color: #2d303d;border-radius: 15px 0px 0px 0px;">&nbsp;</div>
+                    <div class="row pt-2 pb-2"
+                        style="background-color: #2d303d;border-radius: 15px 0px 0px 0px;">&nbsp;</div>
                 </div>
                 <div class="col-*-* pr-3" style="background-color: #323544;">
                     <div class="row pt-2 pb-2" style="background-color: #2d303d;">
@@ -73,7 +77,7 @@
                     </div>
                 </div>
                 {{for forecast.forecastday tmpl="#forecastdayTemplate" /}}
-                <div class="col text-center"
+                <div class="col text-center d-none d-sm-block"
                     style="background-color: #323544;border-radius: 0px 15px 15px 0px;flex:0 0 1%;">
                     <div class="row pt-2 pb-2" style="background-color: #2d303d;border-radius: 0px 15px 0px 0px;">&nbsp;</div>
                 </div>
@@ -96,76 +100,107 @@
             </div>
         </div>
     </script>
-    <script src="//code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="//code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+    </script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+    </script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jsrender/1.0.3/jsrender.min.js"></script>
     <script>
-    
-    $(document).ready(function() {
-        function convertUTCDateToLocalDate(date) {
-            var newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+        $(document).ready(function () {
+            // convertUTCDateToLocalDate :  Get User date
+            function convertUTCDateToLocalDate(date) {
+                var newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
 
-            var offset = date.getTimezoneOffset() / 60;
-            var hours = date.getHours();
+                var offset = date.getTimezoneOffset() / 60;
+                var hours = date.getHours();
 
-            newDate.setHours(hours - offset);
+                newDate.setHours(hours - offset);
 
-            return newDate;
-        }
-        function dateGetWeekDay(value) {
-            var weekdays = new Array(
-                "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
-            );
-            var dt = convertUTCDateToLocalDate(new Date(value));
-            var day = dt.getDay();
-            return weekdays[day];
-        }
-        function dateGetDayMonth(value) {
-            var monthNames = new Array(
-                "Jan", "Feb", "Mar",
-                "Apr", "May", "Jun", "Jul",
-                "Aug", "Sep", "Oct",
-                "Nov", "Dec"
-            );
-            var dt = convertUTCDateToLocalDate(new Date(value));
-            var day = dt.getDate();
-            var month = dt.getMonth();
-            return day + " " + monthNames[month];
-        }
-        function floatRound(value){
-            return Math.round(value)
-        }
-        function int2Color(value,mod){
-            var colorList = new Array(
-                "262936", "323544",
-                "222530", "2d303d"
-            );
-            return colorList[(value % 2) + mod];
-        }
-        function stringToCase(value, upper) {
-            return upper ? value.toUpperCase() : value.toLowerCase();
-        }
-        function getForecast(){
-            var location = $('#location').val()
-            $.getJSON('forecast?location='+ location, function (data) {
-                $('#output').html($('#template').render(data));
+                return newDate;
+            }
+            // dateGetWeekDay : Return day of the week
+            function dateGetWeekDay(value) {
+                var weekdays = new Array(
+                    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+                );
+                var dt = convertUTCDateToLocalDate(new Date(value));
+                var day = dt.getDay();
+                return weekdays[day];
+            }
+            // dateGetDayMonth : Return Month , short convention
+            function dateGetDayMonth(value) {
+                var monthNames = new Array(
+                    "Jan", "Feb", "Mar",
+                    "Apr", "May", "Jun", "Jul",
+                    "Aug", "Sep", "Oct",
+                    "Nov", "Dec"
+                );
+                var dt = convertUTCDateToLocalDate(new Date(value));
+                var day = dt.getDate();
+                var month = dt.getMonth();
+                return day + " " + monthNames[month];
+            }
+            // floatRound : return round number
+            function floatRound(value) {
+                return Math.round(value)
+            }
+            // int2Color : Convert int and mod to color. 
+            function int2Color(value, mod) {
+                var colorList = new Array(
+                    "262936", "323544",
+                    "222530", "2d303d"
+                );
+                return colorList[(value % 2) + mod];
+            }
+            // stringToCase : return string on upercase or lowercase
+            function stringToCase(value, upper) {
+                return upper ? value.toUpperCase() : value.toLowerCase();
+            }
+            var myHelpers = {
+                dateGetWeekDay: dateGetWeekDay,
+                dateGetDayMonth: dateGetDayMonth,
+                floatRound: floatRound,
+                int2Color: int2Color,
+                stringToCase: stringToCase
+            };
+            $.views.helpers(myHelpers);
+
+            // getForecast : Forecast call
+            function getForecast(location) {
+                $.getJSON('forecast?location=' + location, function (data) {
+                        $('#output').html($('#template').render(data));
+                    });
+            }
+
+            window.addEventListener('popstate', function (e) {
+                var location = e.state;
+
+                if (location == null) {
+                    textWrapper.innerHTML = " ";
+                    content.innerHTML = " ";
+                    document.title = defaultTitle;
+                } else {
+                    getForecast(location);
+                    document.title = "Weather Forecast | " + location;
+                }
+            })
+
+            $('#go').on('click', function (e) {
+                e.preventDefault();
+                var location = $('#location').val();
+                url = "?location=" + location;
+                history.pushState(location, null, url);
+                getForecast(location);
+                document.title = "Weather Forecast | " + location;
+                e.stopPropagation();
             });
-        }
-        var myHelpers = {
-            dateGetWeekDay: dateGetWeekDay,
-            dateGetDayMonth: dateGetDayMonth,
-            floatRound: floatRound,
-            int2Color: int2Color,
-            stringToCase: stringToCase
-        };
-
-        $.views.helpers(myHelpers);
-
-        $('#go').on('click', function (event) {
-            event.preventDefault();
-            getForecast();
+            $('#go').click()
         });
-        getForecast();
-    });
     </script>
 </body>
+
 </html>
